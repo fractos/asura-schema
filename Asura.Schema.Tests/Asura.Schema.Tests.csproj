@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Json\SchemaDecoration.cs" />
     <Compile Include="Json\SchemaDefinitions.cs" />
+    <Compile Include="Json\SchemaConstraints.cs" />
     <Compile Include="Json\SchemaMultiConstraints.cs" />
     <Compile Include="Json\SchemaEnums.cs" />
     <Compile Include="Json\SchemaTypes.cs" />

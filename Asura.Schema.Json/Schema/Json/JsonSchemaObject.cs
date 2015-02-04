@@ -126,21 +126,26 @@ namespace Asura.Schema.Json
 
         public bool Validate(string name, JToken source, IList<SchemaError> errors)
         {
+            List<List<SchemaError>> localErrors = new List<List<SchemaError>>();
+
+            foreach (JsonSchemaObjectConstraint constraint in this.Constraints)
+            {
+                localErrors.Add(new List<SchemaError>());
+                constraint.Validate(name, source, localErrors.Last());
+            }
+
             if(this.ConstraintMembership == JsonSchemaObjectConstraintMembership.AllOf)
             {
-                foreach (JsonSchemaObjectConstraint constraint in this.Constraints)
+                foreach(List<SchemaError> constraintErrors in localErrors)
                 {
-                    constraint.Validate(name, source, errors);
+                    foreach(SchemaError constraintError in constraintErrors)
+                    {
+                        errors.Add(constraintError);
+                    }
                 }
             }
             else if(this.ConstraintMembership == JsonSchemaObjectConstraintMembership.AnyOf)
             {
-                List<List<SchemaError>> localErrors = new List<List<SchemaError>>();
-                foreach (JsonSchemaObjectConstraint constraint in this.Constraints)
-                {
-                    localErrors.Add(new List<SchemaError>());
-                    constraint.Validate(name, source, localErrors.Last());
-                }
                 bool passed = localErrors.Any(e => !e.Any()); // one constraint gave no errors
 
                 if(!passed)
@@ -150,12 +155,6 @@ namespace Asura.Schema.Json
             }
             else if(this.ConstraintMembership == JsonSchemaObjectConstraintMembership.OneOf)
             {
-                List<List<SchemaError>> localErrors = new List<List<SchemaError>>();
-                foreach (JsonSchemaObjectConstraint constraint in this.Constraints)
-                {
-                    localErrors.Add(new List<SchemaError>());
-                    constraint.Validate(name, source, localErrors.Last());
-                }
                 bool passed = localErrors.Count(e => !e.Any()) == 1; // constraints giving no errors
 
                 if(!passed)
@@ -165,12 +164,6 @@ namespace Asura.Schema.Json
             }
             else if(this.ConstraintMembership == JsonSchemaObjectConstraintMembership.Not)
             {
-                List<List<SchemaError>> localErrors = new List<List<SchemaError>>();
-                foreach (JsonSchemaObjectConstraint constraint in this.Constraints)
-                {
-                    localErrors.Add(new List<SchemaError>());
-                    constraint.Validate(name, source, localErrors.Last());
-                }
                 bool passed = localErrors.All(e => e.Any());
 
                 if (!passed)
