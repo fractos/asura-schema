@@ -67,13 +67,8 @@ namespace Asura.Schema.Json
         #endregion
 
         #region Arrays
+        public JsonSchemaObject Items { get; set; }
         public bool AdditionalItems { get; set; }
-        private List<JsonSchemaObject> _items = new List<JsonSchemaObject>();
-        public List<JsonSchemaObject> Items
-        {
-            get { return _items; }
-            set { _items = value; }
-        }
         public bool HasMinItems { get; set; }
         public int MinItems { get; set; }
         public bool HasMaxItems { get; set; }
@@ -124,7 +119,17 @@ namespace Asura.Schema.Json
 
             if (tokenType != null)
             {
-                JTokenType type = (JTokenType) Enum.Parse(typeof(JTokenType), tokenType.Value<string>(), true);
+                JTokenType type;
+
+                string typeValue = tokenType.Value<string>();
+                if (typeValue.ToLower() == "number")
+                {
+                    type = JTokenType.Float;
+                }
+                else
+                {
+                    type = (JTokenType) Enum.Parse(typeof(JTokenType), tokenType.Value<string>(), true);
+                }
 
                 if (type != JTokenType.Integer && type != JTokenType.Float)
                 {
@@ -149,7 +154,8 @@ namespace Asura.Schema.Json
                         throw new SchemaException(String.Format("'multipleOf' not valid for anything other than a number type at {0}", source.Path));
                     }
                 }
-                else if (type != JTokenType.String)
+
+                if (type != JTokenType.String)
                 {
                     if (tokenMinLength != null)
                     {
@@ -164,7 +170,8 @@ namespace Asura.Schema.Json
                         throw new SchemaException(String.Format("'pattern' not valid for anything other than a string type at {0}", source.Path));
                     }
                 }
-                else if (type != JTokenType.Array)
+
+                if (type != JTokenType.Array)
                 {
                     if (tokenAdditionalItems != null)
                     {
@@ -196,7 +203,8 @@ namespace Asura.Schema.Json
 
             if (tokenItems != null)
             {
-
+                // this is a schema definition for items found in this array
+                constraint.Items = JsonSchemaObject.Generate(schema, "items", (JObject) source.SelectToken("items"));
             }
 
             // $ref and type
@@ -252,7 +260,7 @@ namespace Asura.Schema.Json
                     errors.Add(new SchemaError(String.Format("Property \"{0}\" was not one of the expected enum values", name)));
                 }
 
-                if (source.Type == JTokenType.Integer)
+                if (source.Type == JTokenType.Integer || source.Type == JTokenType.Float)
                 {
                     int value = source.Value<int>();
 

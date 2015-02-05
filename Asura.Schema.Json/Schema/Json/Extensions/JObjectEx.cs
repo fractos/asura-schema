@@ -10,16 +10,20 @@ namespace Asura.Schema.Json.Extensions
 {
     public static class JObjectEx
     {
-        public static bool Validate(this JObject self, JsonSchema schema, IList<string> errorStrings)
+        public static bool Validate(this JObject self, ISchema schema, IList<string> errorStrings)
         {
             List<SchemaError> errors = new List<SchemaError>();
-            if(!schema.Schema.Validate("$", self, errors))
+            if(schema is JsonSchema)
             {
-                foreach(SchemaError schemaError in errors)
+                if(!((JsonSchema) schema).Schema.Validate("$", self, errors))
                 {
-                    errorStrings.Add(schemaError.ToString());
+                    foreach(SchemaError schemaError in errors)
+                    {
+                        errorStrings.Add(schemaError.ToString());
+                    }
                 }
             }
+
             return !errors.Any();
         }
     }

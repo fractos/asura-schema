@@ -66,6 +66,25 @@ namespace Asura.Schema.Tests.Json
   }
 }";
 
+        protected string FloatExclusiveSchemaSource =
+@"{
+  ""$schema"": ""http://json-schema.org/draft-04/schema#"",
+  ""id"": ""http://xizi.io/4bf232bf-b24b-4d36-b36c-b1214df98071/thing"",
+  ""type"": ""object"",
+  ""title"": ""Root schema"",
+  ""description"": ""Add description here"",
+  ""properties"": {
+    ""code"": {
+      ""id"": ""http://xizi.io/4bf232bf-b24b-4d36-b36c-b1214df98071/demouser/code"",
+      ""type"": ""number"",
+      ""minimum"": 10.5,
+      ""exclusiveMinimum"": ""true"",
+      ""maximum"": 100.5,
+      ""exclusiveMaximum"": ""true""
+    }
+  }
+}";
+
         protected string StringLengthSchemaSource =
 @"{
   ""$schema"": ""http://json-schema.org/draft-04/schema#"",

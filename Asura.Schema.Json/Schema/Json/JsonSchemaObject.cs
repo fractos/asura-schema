@@ -134,13 +134,31 @@ namespace Asura.Schema.Json
                 constraint.Validate(name, source, localErrors.Last());
             }
 
+            if(source.Type == JTokenType.Array)
+            {
+                // check each item against constraints
+                foreach(JToken childItemToken in source.Children())
+                {
+                    foreach (JsonSchemaObjectConstraint constraint in this.Constraints)
+                    {
+                        if(constraint.Items != null)
+                        {
+                            constraint.Items.Validate(String.Format("{0}/[item]", name), childItemToken, errors);
+                        }
+                    }
+                }
+            }
+
             if(this.ConstraintMembership == JsonSchemaObjectConstraintMembership.AllOf)
             {
-                foreach(List<SchemaError> constraintErrors in localErrors)
+                if(localErrors.Any() && localErrors.Any(le => le.Any()))
                 {
-                    foreach(SchemaError constraintError in constraintErrors)
+                    foreach (List<SchemaError> constraintErrors in localErrors)
                     {
-                        errors.Add(constraintError);
+                        foreach (SchemaError constraintError in constraintErrors)
+                        {
+                            errors.Add(constraintError);
+                        }
                     }
                 }
             }
