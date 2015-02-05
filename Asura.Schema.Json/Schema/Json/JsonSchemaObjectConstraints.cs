@@ -210,7 +210,15 @@ namespace Asura.Schema.Json
             // $ref and type
             if (tokenRef == null && tokenType != null)
             {
-                constraint.Type = (JTokenType) Enum.Parse(typeof(JTokenType), tokenType.ToString(), true);
+                string tokenTypeName = tokenType.Value<string>();
+                if(tokenTypeName.ToLower() == "number")
+                {
+                    constraint.Type = JTokenType.Float;
+                }
+                else
+                {
+                    constraint.Type = (JTokenType) Enum.Parse(typeof(JTokenType), tokenTypeName, true);
+                }
             }
             else if (tokenRef != null && tokenType == null)
             {
