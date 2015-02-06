@@ -63,7 +63,7 @@ namespace Asura.Schema.Harness
 
             List<string> errors = new List<string>();
 
-            using (JsonSchema schema = new JsonSchema())
+            using (ISchema schema = new JsonSchema())
             {
                 schema.Parse(schemaSource);
                 schema.Validate(validateThis, errors);
