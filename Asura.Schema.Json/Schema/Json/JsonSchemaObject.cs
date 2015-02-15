@@ -1,22 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 using Newtonsoft.Json.Linq;
 
 namespace Asura.Schema.Json
 {
-    public enum JsonSchemaObjectConstraintMembership
-    {
-        AllOf, AnyOf, OneOf, Not
-    }
-
     public class JsonSchemaObject
     {
-        public string ID { get; set; }
+        public string Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
 
@@ -54,7 +46,7 @@ namespace Asura.Schema.Json
 
             JsonSchemaObject schemaObject = new JsonSchemaObject
             {
-                ID = tokenId != null ? tokenId.ToString() : GenerateSchemaObjectId(schema, name, j),
+                Id = tokenId != null ? tokenId.ToString() : GenerateSchemaObjectId(schema, name, j),
                 Title = tokenTitle != null ? tokenTitle.ToString() : String.Empty,
                 Description = tokenDescription != null ? tokenDescription.ToString() : String.Empty
             };
@@ -112,7 +104,7 @@ namespace Asura.Schema.Json
             {
                 foreach (JProperty child in properties.Children())
                 {
-                    schemaObject.Properties.Add(child.Name, JsonSchemaObject.Generate(schema, child.Name, (JObject) properties.SelectToken(child.Name)));
+                    schemaObject.Properties.Add(child.Name, Generate(schema, child.Name, (JObject) properties.SelectToken(child.Name)));
                 }
             }
 

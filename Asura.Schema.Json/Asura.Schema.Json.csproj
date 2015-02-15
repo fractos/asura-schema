@@ -44,8 +44,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Schema\Json\Extensions\JObjectEx.cs" />
+    <Compile Include="Schema\Json\Extensions\JTokenEx.cs" />
     <Compile Include="Schema\Json\JsonSchema.cs" />
     <Compile Include="Schema\Json\JsonSchemaObject.cs" />
+    <Compile Include="Schema\Json\JsonSchemaObjectConstraintMembership.cs" />
     <Compile Include="Schema\Json\JsonSchemaObjectConstraints.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

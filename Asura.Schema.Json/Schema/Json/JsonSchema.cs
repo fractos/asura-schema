@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 using Newtonsoft.Json.Linq;
 
-using Asura.Schema;
 using Asura.Schema.Json.Extensions;
 
 namespace Asura.Schema.Json
@@ -62,7 +57,7 @@ namespace Asura.Schema.Json
             JToken tokenSchema = j["$schema"];
             JObject definitions = (JObject) j.SelectToken("definitions");
 
-            if(tokenSchema == null)
+            if(tokenSchema != null)
             {
                 this.Id = tokenSchema.ToString();
             }

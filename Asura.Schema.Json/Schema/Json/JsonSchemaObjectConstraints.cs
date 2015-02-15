@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 using Newtonsoft.Json.Linq;
-
-using Asura.Schema;
 
 namespace Asura.Schema.Json
 {
@@ -263,7 +259,7 @@ namespace Asura.Schema.Json
                     errors.Add(new SchemaError(String.Format("Property \"{0}\" was not of expected type {1}", name, this.Type.ToString().ToLower())));
                 }
 
-                if (this.Enums.Any() && !this.Enums.Any(e => e == source.ToString()))
+                if (this.Enums.Any() && this.Enums.All(e => e != source.ToString()))
                 {
                     errors.Add(new SchemaError(String.Format("Property \"{0}\" was not one of the expected enum values", name)));
                 }

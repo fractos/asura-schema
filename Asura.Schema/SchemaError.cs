@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Asura.Schema
 {
@@ -15,24 +11,16 @@ namespace Asura.Schema
             set { _message = value; }
         }
 
-        private int _line = 0;
-        public int Line
-        {
-            get { return _line; }
-            set { _line = value; }
-        }
+        public int Line { get; set; }
 
-        private int _character = 0;
-        public int Character
-        {
-            get { return _character; }
-            set { _character = value; }
-        }
+        public int Character { get; set; }
 
-        private bool _havePosition = false;
+        private readonly bool _havePosition;
 
         public SchemaError(string message)
         {
+            Line = 0;
+            Character = 0;
             this.Message = message;
         }
 
@@ -49,11 +37,7 @@ namespace Asura.Schema
 
         public override string ToString()
         {
-            if (_havePosition)
-            {
-                return String.Format("{0} at {1}:{2}", _message, _line, _character);
-            }
-            return _message;
+            return _havePosition ? String.Format("{0} at {1}:{2}", _message, Line, Character) : _message;
         }
     }
 }

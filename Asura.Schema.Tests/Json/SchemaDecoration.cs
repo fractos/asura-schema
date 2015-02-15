@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using NUnit.Framework;
 
-using NUnit.Framework;
-
-using Asura.Schema;
 using Asura.Schema.Json;
 
 namespace Asura.Schema.Tests.Json
@@ -57,8 +52,6 @@ namespace Asura.Schema.Tests.Json
         {
             string schemaSource = this.FullDecorationSchemaSource;
 
-            List<string> errors = new List<string>();
-
             using (JsonSchema schema = new JsonSchema())
             {
                 schema.Parse(schemaSource);
@@ -71,8 +64,6 @@ namespace Asura.Schema.Tests.Json
         public void PartialDecorationParses()
         {
             string schemaSource = this.PartialDecorationSchemaSource;
-
-            List<string> errors = new List<string>();
 
             using (JsonSchema schema = new JsonSchema())
             {

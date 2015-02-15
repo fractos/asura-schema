@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 using NUnit.Framework;
 
-using Asura.Schema;
 using Asura.Schema.Json;
 
 namespace Asura.Schema.Tests.Json

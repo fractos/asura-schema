@@ -4,7 +4,6 @@ using System.Linq;
 
 using NUnit.Framework;
 
-using Asura.Schema;
 using Asura.Schema.Json;
 
 namespace Asura.Schema.Tests.Json
