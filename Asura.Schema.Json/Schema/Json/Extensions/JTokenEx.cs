@@ -23,8 +23,13 @@ namespace Asura.Schema.Json.Extensions
         /// <param name="objectId"></param>
         /// <param name="firstLevel"></param>
         /// <returns></returns>
-        public static JObject GenerateSchema(this JToken self, string schemaVersion, string idPrefix, string parentId, string objectId = "", bool firstLevel = true)
+        public static JObject GenerateSchema(this JToken self, string schemaVersion, string idPrefix, string parentId, string objectId = "", bool firstLevel = true, GenerateSchemaOptions options = null)
         {
+            if (options == null)
+            {
+                options = GenerateSchemaOptions.Default;
+            }
+
             JObject schema = new JObject();
 
             if (firstLevel)
@@ -34,12 +39,20 @@ namespace Asura.Schema.Json.Extensions
 
             string id = String.Concat(firstLevel ? idPrefix : parentId, "/", objectId);
 
-            schema.Add("id", id);
+            if (options.IncludeId)
+            {
+                schema.Add("id", id);
+            }
 
             schema.Add("type", Enum.GetName(typeof(JTokenType), self.Type).ToLower());
-            schema.Add("title", firstLevel ? "Root schema" : String.Concat(objectId, " schema"));
-            schema.Add("description", "Add description here");
-
+            if (options.IncludeTitle)
+            {
+                schema.Add("title", firstLevel ? "Root schema" : String.Concat(objectId, " schema"));
+            }
+            if (options.IncludeDescription)
+            {
+                schema.Add("description", "Add description here");
+            }
             //schema.Add("name", firstLevel ? "/" : objectId);
 
             if (self.Type == JTokenType.Object)
@@ -48,7 +61,7 @@ namespace Asura.Schema.Json.Extensions
 
                 foreach (JProperty property in ((JObject) self).Properties())
                 {
-                    properties.Add(property.Name, property.Value.GenerateSchema(schemaVersion, idPrefix, id, property.Name, false));
+                    properties.Add(property.Name, property.Value.GenerateSchema(schemaVersion, idPrefix, id, property.Name, firstLevel: false, options: options));
                 }
 
                 schema.Add("properties", properties);
@@ -60,7 +73,7 @@ namespace Asura.Schema.Json.Extensions
 
                 if (sameType)
                 {
-                    schema.Add("items", self.Values().First().GenerateSchema(schemaVersion, idPrefix, id, "0", false));
+                    schema.Add("items", self.Values().First().GenerateSchema(schemaVersion, idPrefix, id, "0", firstLevel: false, options: options));
                 }
                 else
                 {
@@ -71,7 +84,7 @@ namespace Asura.Schema.Json.Extensions
                     for (int x = 0; x < children.Count; x++)
                     {
                         JToken child = children[x];
-                        ((JArray) schema["items"]).Add(child.GenerateSchema(schemaVersion, idPrefix, id, x.ToString(), false));
+                        ((JArray) schema["items"]).Add(child.GenerateSchema(schemaVersion, idPrefix, id, x.ToString(), firstLevel: false, options: options));
                     }
                 }
             }
